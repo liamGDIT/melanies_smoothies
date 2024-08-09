@@ -1,4 +1,5 @@
 # Import python packages
+import requests
 import streamlit as st
 from snowflake.snowpark.functions import col
 
@@ -22,7 +23,14 @@ ingredients_list = st.multiselect(
 
 if ingredients_list:
 
-    ingredients_str = ' '.join(ingredients_list)
+    ingredients_str = ''
+    
+    for ingredient in ingredients_list:
+        ingredients_str += ingredient + ' '
+        st.subheader(ingredient+' Nutrition Information')
+        fruityvice_response = requests.get("https://fruityvice.com/api/fruit/"+ingredient)
+        fv_df = st.dataframe(data=fruityvice_response.json(), use_container_width=True)
+        
 
     insert_btn = st.button('Submit Order')
     
@@ -33,7 +41,3 @@ if ingredients_list:
         ''').collect()
 
         st.success(f'Your smoothie is ordered, {name_on_order}!')
-
-import requests
-fruityvice_response = requests.get("https://fruityvice.com/api/fruit/watermelon")
-st.text(fruityvice_response)
