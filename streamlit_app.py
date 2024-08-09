@@ -29,7 +29,7 @@ if ingredients_list:
     if insert_btn:
         session.sql(f'''
             insert into smoothies.public.orders
-            values ('{ingredients_str}', '{name_on_order}')
+            values (order_seq.nextval, false, '{ingredients_str}', '{name_on_order}', current_timestamp)
         ''').collect()
 
         st.success(f'Your smoothie is ordered, {name_on_order}!')
